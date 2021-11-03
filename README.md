@@ -14,7 +14,7 @@ Currently, JOTS isn't hosted; however, feel free to use JOTS on your own compute
 - Tags & Notes are organized by "Collection."
 – Dark-Mode 
 
-#### HOW TO SET UP
+#### How to Set up
 
 1. Clone from Github. 
 2. Install Dependencies (see requirements.txt)
