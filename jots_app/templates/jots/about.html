@@ -1,0 +1,24 @@
+{% extends 'jots/layout.html' %}
+
+{% block title %}About{% endblock %}
+
+
+{% block content %}
+    <h6><strong>Currently Planned Features</strong></h6>
+        {% if features %}
+            <ul>
+            {% for f in features %}
+                <li>{{ f }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    <p><a href="{% url 'terms_of_service' %}">Our terms of service.</a></p>
+    <h6>Have Feedback? Concerns? Lemme know.</h6>
+        <form action="{% url 'about' %}"" method="post">
+            {% csrf_token %}
+            {{ feedbackform }}
+            <br>
+            <button id='feedback' name='feedback' type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
+
+{% endblock %}

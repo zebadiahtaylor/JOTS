@@ -1,0 +1,48 @@
+{% extends 'jots/layout.html' %} 
+
+{% block title %} Edit {{ article.title }} {% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated and is_member %}
+
+<h6>Edit <i>{{ article.title }}</i> for <b>{{ collection.title }}</b></h6>
+
+<form action="{% url 'article_edit' article.id %}" method="post">
+    {% csrf_token %}
+    {{ form.title }}
+    <textarea class="articleEdit" type="text" name="content" autofocus rows="{{ rows }}">{{ content|safe }}</textarea><br>
+    {{ form.tag }}
+    {{ form.new_tag }}
+    Auto-tag with Title?: {{ form.auto_create_tag }} 
+    <button type="submit" class="btn btn-primary">Save Edits</button>
+</form>
+
+<br>
+<br>
+<p>
+    Articles employ the Markdown syntax. 
+<a href="https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax">Click here to learn more.</a>
+</p>
+<br>
+<br>
+<br><br>
+<form action="{% url 'article_delete' article.id %}"  method="post">
+    <p>Delete?</p>
+    {% csrf_token %}
+    {{ delete_form }}
+    <button name='delete' type='submit' class='btn btn-danger'>DELETE ARTICLE</button>
+    <p style="color: red;"><small>Warning: This action cannot be undone.</small></p>
+</form>
+
+
+{% else %}
+    You must be logged in to edit articles.
+{% endif %}
+
+{% endblock %}
+
+
+
+
+

@@ -1,0 +1,103 @@
+{% load static %}
+
+<!doctype html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="d&d, dungeons & dragons, collections, collection, tabletop, jot, notes, notetaking, note-taking,
+        {% if article.title %}{{ article.title }}, {{ article.tag }}, {% endif %} {% if collection %}{{ collection.title }}{% endif %}">
+
+        <!-- develop content for meta-description above -->
+        <meta name="author" content="">
+        <title>{% block title %}{% if collection %}{{ collection.title }}{% endif %}{% if article %}: {{ article.title }}{% endif %}{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        
+        <script src="{% static 'jots/js.js' %}" type="text/javascript"></script>
+        {% block styles %}{% endblock %}
+        <link rel="stylesheet" type="text/css" href="{% static 'jots/styles.css' %}">
+        {% if user.dark_mode %}
+        <link rel="stylesheet" type="text/css" href="{% static 'jots/darkmodestyles.css' %}">
+        {% endif %}
+    </head>
+
+    <body>
+        {% if message %}
+        <div class="alert-primary" style="font-size: larger; background-color: rgb(37, 24, 223); color: white;">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+            <strong>{{ message }}</strong>
+        </div>
+        {% endif %}
+        {% if user.is_authenticated %}
+        <ul class='nav' style='background-color: black; color: white; display: flex; justify-content: space-between;'>
+        {% else %}
+        <ul class='nav' style='background-color: black; color: white; display: flex;'>
+        {% endif %}
+            <h3><b><strong> jots <small>( in beta )</small> </strong></b> </h3>
+            {% if user.is_authenticated %}
+                <div class="dropdown" style="float:right;">
+                    <button class="dropbtn">{{ user.username }}</button>
+                    <div class="dropdown-content" style="right:0px">
+                        <a class="nav-link" href="{% url 'dark_mode' %}" method="post" value="" onload="getPageInfo()">Dark Mode</a>
+                        <a class="nav-link" href="{% url 'collections' %}">My Collections</a>
+                        <a class="nav-link" href="{% url 'collection_create' %}">Start Collection</a>
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">Log In</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
+            </li>
+            
+            {% block nav %}{% endblock %}
+            
+            {% endif %}
+        </ul>
+        <ul class="nav">
+            {% if user.is_authenticated or is_member or collection.is_public %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'collections' %}"><strong>Collections |</strong></a>
+                </li>
+
+                {% if collection.id %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'collection_main' collection.id %}"><strong>{{ collection.title }}</strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notes' collection.id %}"><strong>Notes </strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notes_all' collection.id %}"><strong></strong><small>All Notes</small></strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'articles' collection.id %}"><strong>Articles |</strong></a>
+                    </li>
+                    {% if is_member %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'article_create' collection.id %}"><small><strong>Add Article</strong></small></a>
+                        </li>
+                    {% endif %}
+                    {% if is_member %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tags' collection.id %}"><strong>Tags</strong></a>
+                        </li>
+                    {% endif %}
+                {% else %}
+                <a class="nav-link" href="{% url 'collection_create' %}"><small><strong>Start Collection</strong></small></a>
+                {% endif %}
+            {% else %}
+            {% endif %}
+        </ul>
+        {% block content %}
+        {% endblock content %}
+        <br><br><br><br><br>
+        
+    </body>
+</html>

@@ -1,0 +1,34 @@
+{% extends "jots/layout.html" %}
+
+{% block content %}
+
+    <h2>Register</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Email Address">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password" id="password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password" id="confirmation">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">  
+        <input type="checkbox" onclick="showPWandConfirmation()" style="margin-left: 10px;">Show Passwords?
+    </form>
+    
+    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    <br><br>
+    <small><a href="{% url 'terms_of_service' %}">Users of jots agree to our terms of service</a></small>
+
+
+{% endblock %}

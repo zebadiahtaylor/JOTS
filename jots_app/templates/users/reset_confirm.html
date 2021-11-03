@@ -1,0 +1,21 @@
+{% extends "jots/layout.html" %}
+
+{% block content %}
+
+    <h2></h2>
+
+    <form action="{% url 'password_reset_complete' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" type="username" name="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+
+{% endblock %}

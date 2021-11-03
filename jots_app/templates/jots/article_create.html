@@ -1,0 +1,25 @@
+{% extends 'jots/layout.html' %} 
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    <h2>Write new article for {{ collection.title }}</h2>
+
+        <form action="{% url 'article_create' collection.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <br>
+            <button type="submit" class="btn btn-primary">Make Article</button>
+        </form>
+        <br>
+        <br>
+        <p>
+            Articles employ the Markdown syntax. 
+        <a href="https://docs.github.com/en/github/writing-on-github/basic-writing-and-formatting-syntax">Click here to learn more.</a>
+        </p>
+        <br>
+{% else %}
+You must be logged in to write articles.
+{% endif %}
+
+{% endblock %}

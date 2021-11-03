@@ -1,0 +1,18 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+    
+    <h6><strong>All Publicly Viewable collections</strong></h6>    
+    <br>
+    <ul>
+        {% for collection in collections %}
+            <li><a href="{% url 'collection_main' collection.id %}">{{ collection.leader }}'s {{ collection.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <h6><strong>All Collections that Welcome the Public</strong></h6>    
+    <br>
+    <ul>
+        {% for collection in collections %}
+            <li><a href="{% url 'collection_request' collection.id %}">{{ collection.leader }}'s {{ collection.title }}</a></li>
+        {% endfor %}
+{% endblock %}

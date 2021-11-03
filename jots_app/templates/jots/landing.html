@@ -1,0 +1,67 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+
+<br>
+<h6 style="color: black; background-color: lightgray;">Welcome to <strong>jots</strong></h6>
+
+<div style="background-color: cornsilk; color: black">
+    <p>What is it?</p>
+    <ul>
+        <li>
+            A webapp for creating and sharing notes.
+        </li>
+    </ul>
+</div>
+
+
+<div style="background-color: lightblue; color: black;">
+    <p>What's special about it?</p>
+    <ul>
+        <li>
+            Makes writing high quality notes fast and easy. 
+        </li>
+        <li>
+            Enables group collaboration.
+        </li>
+        <li>
+            Auto-organizes notes with tags.
+        </li>
+        <li>
+            Simplifies gathering notes into long-form articles. 
+        </li>
+        <li>
+            Easy to use.
+        </li>
+        <li>
+            Free for small groups and individual users. 
+        </li>
+        <li>
+            Available in darkmode.
+        </li>
+        <li>
+            Your data will not be exploited.
+        </li>
+        <li>
+            Always getting better. 
+        </li>
+    </ul>
+</div>
+<div style="background-color: lightgray;">
+    <p>What can you use it for?</p>
+    <ul>
+        <li>Take fast notes for a class or a meeting.</li>
+        <li>Brainstorm ideas for a project.</li>
+        <li>Manage the lore for your role-playing sessions</li>
+        <li>Record health-related information (notes are dated) </li>
+        <li>Use it as a journal</li>
+    </ul>
+</div>
+<div style="background-color: cornsilk; color: black">
+    <br>
+    <p>To get started, <a href="{% url 'register' %}">register</a> or <a href="{% url 'login' %}">login</a>.</p>
+    <br>
+</div>
+
+
+{% endblock %}

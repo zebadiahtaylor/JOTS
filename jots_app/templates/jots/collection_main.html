@@ -1,0 +1,34 @@
+{% extends 'jots/layout.html' %}
+
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ collection.title }}</h2>
+<p hidden>{{ collection.description }}</p>
+
+{% if is_member %}
+<form action="{% url 'notes' collection.id %}" method="post">
+    {% csrf_token %}
+    {{ noteform }}
+    <button id="note" name="note" type="submit" class="btn btn-primary">save note</button>
+</form>
+{% endif %}
+<br>
+<br>
+<h6 ><a href="{% url 'notes' collection.id %}">Notes</a></h6>
+<br>
+<h6><a href="{% url 'articles' collection.id %}">Articles</a></h6>
+
+
+{% if collection.leader == user %}
+<br>
+<h6>Group Tools</h6>
+<ul>
+    <li><a href="{% url 'collection_manage' collection.id %}">Manage Group / Invite Others</a></li>
+</ul>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h6>Edit {{ collection.title }}</h6>
+
+        <form action="{% url 'collection_edit' collection.id %}" method="post">
+            {% csrf_token %}
+            {{ form}}
+            <button type="submit" class="btn btn-primary">Save Edits</button>
+        </form>
+        
+    {% endif %}
+{% endblock %}

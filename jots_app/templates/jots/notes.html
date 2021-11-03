@@ -1,0 +1,57 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+    {% if is_member %}
+
+    <form action="{% url 'notes' collection.id %}" method="post">
+        {% csrf_token %}
+        {{ noteform }}
+        <button id="note" name="note" type="submit" class="btn btn-primary">save note</button>
+    </form>
+    <br><br>
+    {% endif %}
+
+    <h6>
+        <strong>Most Recent Notes for {{ collection.title }}</strong>
+        <form action="{% url 'notes' collection.id %}" method="post">
+            {% csrf_token %}
+            <select name="filter_by_tag">
+                <option value="">filter by tag</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.name }}">{{ tag.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" placeholder="or filter by text" name="filter_by_text">
+            <input type="submit" class="" name="filter" value="filter notes"></input>
+            <input type="submit" class="" name="clear" id="clear" value="unfilter notes"></input>
+        </form >
+    </h6>
+    {% if notes %}
+        {% for note in notes %}
+        <div class="notesDiv">
+            {% if is_member %}
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <button onclick=editText({{ note.id }}) id="{{ note.id }}" type="submit" class="editBtn" value="{{note.text}}">Edit</button>
+                <form action="{% url 'note_delete' note.id %}" class="editNoteForm" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <button action="" type="submit" name="delete">Delete</button>
+                </form>
+            {% endif %}
+            <p style="display:inline"><small><strong>{{note.tag}}</strong></small> <strong>|</strong></p>
+            <p id="note{{note.id}}" style="display: inline"> {{ note.text }}</p>
+            <form class="noteForm" action="{% url 'note_edit' note.id %}" method="post" style="display:none" id="noteForm{{note.id}}">
+                {% csrf_token %}
+                {{ editnoteform }}
+                <button>Save</button>
+            </form>
+        </div>
+        {% endfor %}
+    <br><br>
+    <a href="{% url 'notes_all' collection.id %}">Read All Notes</a>
+    {% else %}
+        <p>No notes match your query</p>
+    {% endif %}
+
+
+{% endblock %}
+

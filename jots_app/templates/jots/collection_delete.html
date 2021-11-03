@@ -1,0 +1,23 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+
+    <h1><strong>Are you certain you wish to delete {{ collection.title }}?</strong></h1>
+    
+    <p>This action cannot be undone.</p>
+        
+    <p>All notes, tags, and articles, as well as player's associations will be deleted and cannot be undone.</p>
+    <p>Alternatively, you can make changes to {{ collection.title }} at 
+        <a href="{% url 'collection_edit' collection.id %}">Edit Collection</a> or 
+        <a href="{% url 'collection_manage' collection.id %}">Manage Collection</a>.
+    </p>
+    
+    <h6>If you're certain, check the box and type DELETE:</h6>
+
+<form action="{% url 'collection_delete' collection.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <button name='delete' type='submit' class='btn btn-danger'>DELETE COLLECTION</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+.env
+.DS_Store
+.vscode
+data/
+db.sqlite3
+docker-compose.yml
+Dockerfile
+notes.txt
+JOTS/__pycache__
+jots_app/__pycache__
+jots_app/migrations/
+articles/

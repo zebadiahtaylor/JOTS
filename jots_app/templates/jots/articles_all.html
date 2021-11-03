@@ -1,0 +1,24 @@
+{% extends 'jots/layout.html' %} 
+
+{% block content %}
+    
+    {% if articles %}
+
+        <h1>Articles</h1>
+
+        <ul>
+            {% for article in articles %}
+                <li><a href="{% url 'article' article.id %}">{{ article.title }}</a></li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+        No articles found for {{ collection.title }}. 
+    {% endif %}
+    
+    {% if is_member %}
+    <a href="{% url 'article_create' collection.id %}">Write new article.</a>
+    {% endif %}
+
+    
+{% endblock %}

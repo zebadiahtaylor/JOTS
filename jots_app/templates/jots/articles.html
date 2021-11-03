@@ -1,0 +1,33 @@
+{% extends 'jots/layout.html' %} 
+
+{% block content %}
+<ul>
+
+    {% if is_member %}
+    <li class="nav-item"><a href="{% url 'article_create' collection.id %}">Create New Article</a></li>
+    {% endif %}
+
+    {% if articles %}
+    <li class="nav-item"><a href="{% url 'articles_all' collection.id %}">View All Articles</a></li>
+    {% endif %}
+    
+</ul>
+
+<div class="container" style="border: 1px; border-style: solid;">
+    {% if articles %}
+        <h1>Articles</h1>
+        <ul>
+            {% for article in articles %}
+            <li><a href="{% url 'article' article.id %}"><strong>{{ article.title }}</strong></a></li>
+            {% endfor %}
+            
+        </ul>
+    {% else %}
+        <p>No articles found for {{ collection.leader }}'s {{ collection.title }}.</p>
+    {% endif %}
+</div>
+<div>
+
+</div>
+
+{% endblock %}

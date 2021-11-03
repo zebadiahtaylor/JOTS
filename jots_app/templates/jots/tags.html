@@ -1,0 +1,53 @@
+{% extends 'jots/layout.html' %}
+
+
+{% block content %}
+
+    <h3><strong>Tag Manager for {{ collection.title }}</strong></h3>
+    <br><br>
+
+        <form action="{% url 'tags' collection.id %}" method="post">
+            {% csrf_token %}
+            {{ maketagform }}
+            <button type="submit" name="make" id="make" class="btn btn-primary">Create Tag</button>
+        </form>
+        
+        <br>
+
+        {% if tags %}
+        <strong>* * *</strong>
+        <br><br>
+                <form action="{% url 'tags' collection.id %}" method="post">
+                    {% csrf_token %}
+                    {{ edittagform.old_tag }}
+                    {{ edittagform.name }}
+                    <button type="submit" name="edit" id="edit" class="btn btn-primary">Edit Tag</button>
+                </form>
+                <br>
+                <form action="{% url 'tags' collection.id %}" method="post">
+                    {% csrf_token %}
+                    {{ deletetagform }}
+                    <button type="submit" name="delete" id="delete" class="btn btn-primary">Delete Tag</button>
+                    <small style="color: red;">WARNING: All associated notes and articles will lose their tags.</small>
+                </form>
+            <br><br>
+        <!-- <h6><strong>Another way to edit existing tags: </strong></h6>
+        <form action="{% url 'tags' collection.id %}" method="post">
+            {% csrf_token %}        
+            <select>
+                <option value="">Select a tag to change.</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.id }}">{{ tag.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="newname" id="newname" placeholder="New Tag Name">
+            <button type="submit" name="edit" id="edit" class="btn btn-primary">Edit Tag</button>
+        </form> -->
+        <br><br>    
+        <h6><strong>All current tags for {{ collection.title }}</strong></h6>
+                {% for tag in tags %}
+                    {{ tag.name }} |
+                {% endfor %}
+    {% endif %}
+    
+{% endblock %}

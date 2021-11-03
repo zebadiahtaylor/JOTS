@@ -1,0 +1,43 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+<h3>Manage {{user}}'s {{collection.title}}</h3>
+
+{% if players %}
+<strong>Current Members :</strong>
+    {% for player in players %}
+        {{ player }} |
+    {% endfor %}
+{% endif %}
+<br>
+<br>
+
+<form action="{% url 'invite' collection.id %}"" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <small>If the email exists, they will receive an invite to the website shortly. Once a person registers, enter their username below. This feature will be streamlined outside of Beta.</small><br>
+    <button type="submit" class="btn btn-primary" name="jots_invite" id="jots_invite">Email Person</button>
+</form>
+
+<br><br>
+
+<form action="{% url 'invite' collection.id %}"" method="post">
+    {% csrf_token %}
+    {{ invitetogroupform }}
+    <small>If the username is associated with a user, that user will see an invite the next time they log in.</small><br>
+    <button type="submit" class="btn btn-primary" name='group_invite' id='group_invite'>Invite User</button>
+</form>
+<br>
+<br>
+<br>
+<br>
+<a href="{% url 'collection_edit' collection.id %}">Edit collection</a>
+<br>
+<br>
+<a href="{% url 'collection_complete' collection.id %}">Complete collection</a>
+<br>
+<a href="{% url 'collection_delete' collection.id %}">Delete collection</a>
+    
+</form>
+
+{% endblock %}

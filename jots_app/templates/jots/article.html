@@ -1,0 +1,43 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+
+    <h4><strong>{{ article.title }} | </strong></h4>
+    <small>{{ article.tag }}</small>
+    <p>{{ content|safe }}</p>
+    <br>
+    {% if is_member %}
+    <a href="{% url 'article_edit' article.id %}">Edit this article</a>
+    {% endif %}
+    {% if notes %}
+    <br><br><br>
+        {% for note in notes %}
+        <div class="notesDiv">
+            {% if is_member %}
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <button onclick=editText({{ note.id }}) id="{{ note.id }}" type="submit" class="editBtn">Edit</button>
+                <form action="{% url 'note_delete' note.id %}" class="editNoteForm" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <button action="" type="submit" name="delete">Delete</button>
+                </form>
+                <form action="{% url 'article_add_note' article.id note.id %}" class="editNoteForm" method="post" style="display:inline">
+                    {% csrf_token %}
+                    <button action="" type="submit" name="note.id">Add</button>
+                </form>
+            {% endif %}
+            <b> {{ note.tag}} | </b> 
+            <p id="note{{note.id}}" style="display: inline">{{ note.text }}</p>
+            <form action="{% url 'note_edit' note.id %}" method="post" style="display:none" id="noteForm{{note.id}}">
+                {% csrf_token %}
+                {{ editnoteform}}
+                <button>Save</button>
+            </form>
+        </div>
+        {% endfor %}
+        <br><br>
+    {% else %}
+        <p>No notes using this article's tag were found.</p>
+    {% endif %}
+
+
+{% endblock %}

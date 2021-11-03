@@ -1,0 +1,58 @@
+{% extends 'jots/layout.html' %}
+
+{% block content %}
+    {% if leader_collections or follower_collections %}
+        {% if leader_collections %}
+            <h5><strong>Your Collections</strong></h5><br>
+            <ul>
+                {% for collection in leader_collections %}
+                <li><a href="{% url 'collection_main' collection.id %}">{{ collection.title }}</a></li>
+                {% endfor %}
+            </ul>
+            
+        {% endif %}
+
+        {% if follower_collections %}
+        
+            <h5><strong>Collections (as Member)</strong></h5><br>
+            <ul>
+                {% for collection in follower_collections %}
+                <li><a href="{% url 'collection_main' collection.id %}">{{ collection.title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+        {% endif %} 
+
+       
+    {% else %}
+    <br>
+    <br>
+    <div class="helpful">
+        <strong>Want to be apart of another collection? Send that collection's leader your username. You may eventually  see their invite here.</strong>
+    </div>
+    <br>
+    <br>
+    {% endif %}
+    {% if invites %}
+    <h5><strong>You Have Invites</strong></h5><br>
+    <small>
+        {% for invite in invites %}
+                <form action="{% url 'respond_to_invite' invite.id %}" method="post">
+                <fieldset style="border: 1px; border-style: solid;">
+                You are invited to {{invite.leader}}'s <em>{{ invite.title }}</em><br>
+                    {% csrf_token %}
+                    {{ inviteform }}
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </fieldset>
+                </form>
+        {% endfor %}
+    </small>
+    {% endif %}
+    <br><br>
+    <div>
+        <a href="{% url 'collection_create' %}">Start a Collection</a><br>
+    </div>
+    <a href="{% url 'collection_find' %}">Find another Collection to Join</a>
+
+
+{% endblock %}
