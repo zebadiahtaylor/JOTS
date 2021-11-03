@@ -1,4 +1,4 @@
-Django==3.2
+Django==3.2.9
 psycopg==3.0.1
 python-dotenv==0.19.0
 markdown2==2.4.0
