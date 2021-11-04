@@ -21,7 +21,6 @@ Currently, JOTS isn't hosted; however, feel free to use JOTS on your own compute
 3. In terminal, paste the following lines after modifying the email & password: 
 echo "
 SECRET_DJANGO_KEY = 'Generateyourownsecretkey, please'
-
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'YourName@gmail.com'
