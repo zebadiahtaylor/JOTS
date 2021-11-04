@@ -18,7 +18,7 @@ Currently, JOTS isn't hosted; however, feel free to use JOTS on your own compute
 
 1. Clone from Github. 
 2. Install Dependencies (see requirements.txt)
-3. In terminal, paste the following lines after modifying the email & password: 
+3. In terminal, paste the following lines after modifying the Secret Django Key (modifying gmail and email password to use the email-related features): 
 echo "
 SECRET_DJANGO_KEY = 'Generateyourownsecretkey, please'
 
