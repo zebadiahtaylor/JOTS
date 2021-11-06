@@ -1,4 +1,4 @@
-# JOTS
+# JOTS  
 ## Journal of the Session
 
 A webapp for taking fast notes, designed for business, school, and collaboration with groups. 
