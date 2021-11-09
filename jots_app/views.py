@@ -12,46 +12,36 @@ from . import utils
 
 # Create your views here.
 
-def test(request):
+def tests(request):
     return render(request, "jots/test.html")
-
-
-def index(request):
-    """
-    Gateway to various editions / groups / articles / notes.
-    Should be highly adjustable based on user usage.
-    """
-    if request.user.is_authenticated:
-        leader_collections, follower_collections = utils.get_users_collections(request.user)
-
-        user = User.objects.get(id=request.user.id)
-        return render(request, "jots/collections.html", {
-            'leader_collections': leader_collections,
-            'follower_collections': follower_collections, 
-            'invites': [x for x in user.collection_invites.all()],
-            'inviteform': AcceptGroupInviteForm(),
-            })
-    else:
-        return HttpResponseRedirect(reverse("landing"))
-
+    
 def landing(request):
     return render(request, 'jots/landing.html')
 
-def error(request, code=404):
-    # TODO
-    return render(request, "jots/error.html", {
-        "code": code,
-    })
+def index(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("collections"))
+    else:
+        return HttpResponseRedirect(reverse("landing"))
 
 
-"""collections"""
+""" COLLECTIONS
+
+Collection is the app-wide term for a group of notes, usually related by subject matter.
+For example, an organization may have one collection attached to a particular paroject,
+whereas a student may have a collection for a single class, e.g., Biology.
+
+Each collection is private by default, but can be made public or shared with specific users. 
+
+This set of pages is a hub for collection management, and acts
+as a gate to notes and articles. 
+"""
 
 def collections(request):
     if request.user.is_authenticated:
         leader_collections, follower_collections = utils.get_users_collections(request.user)
         
         user = User.objects.get(id=request.user.id) 
-
         return render(request, "jots/collections.html", {
             'leader_collections': leader_collections,
             'follower_collections': follower_collections, 
@@ -63,7 +53,9 @@ def collections(request):
 
 
 def collection_main(request, collection_id):
-    """Shows Recent Notes, and most popular article titles of a given collection"""
+    """  For a single collection. 
+    Shows Recent Notes, and most popular article titles of a given collection
+    """
     is_member = utils.user_has_follower_permissions(collection_id, request.user)
     collection = Collection.objects.get(id=collection_id)
 
@@ -183,44 +175,6 @@ def collection_find(request):
         })
 
 
-def collection_request(request, collection_id): 
-    """
-    DISABLED
-    """
-    if request.user.is_authenticated:
-        collection = Collection.objects.get(id=collection_id)
-        if request.method == "POST" and collection.is_public:
-            pass
-
-        else:
-            form = RequestForm()
-            return render(request, "jots/collection_request.html", {
-                "collection": collection,
-                "form": form,
-                })
-        return redirect(reverse("landing"))
-
-    else:
-        return redirect(reverse("login"))
-
-
-def collection_complete(request, collection_id):
-    """
-    TODO
-    """
-    collection = Collection.objects.get(id=collection_id)
-
-    if request.user.is_authenticated and request.user == collection.leader: 
-        leader_collections, follower_collections = utils.get_users_collections(request.user)
-        return render(request, "jots/collections.html", {
-                'message': "This feature isn't available yet.",
-                'leader_collections': leader_collections,
-                'follower_collections': follower_collections, 
-                })
-    else:
-        return HttpResponseRedirect(reverse("landing"))
-
-
 """ NOTES AND ARTICLES """
 
 
@@ -255,7 +209,6 @@ def notes(request, collection_id):
             notes = Note.objects.filter(collection=collection_id).filter(tag__name__contains=(request.POST['filter_by_tag']))
 
         elif request.POST['filter_by_text'] != "":
-            print(f"{request.POST['filter_by_text']}")
             notes = Note.objects.filter(collection=collection_id).filter(text__contains=request.POST['filter_by_text'])
         
 
@@ -532,13 +485,10 @@ def tags(request, collection_id):
         render(request, "jots/landing.html")
 
 
-""" About, User Profiles, Membership """
+""" About, Membership """
 
 
 def about(request):
-    """
-    currently there's no link to this page. 
-    """
     feedbackform = FeedbackForm(auto_id='')
     if request.method == "POST":
         form = FeedbackForm(request.POST)
@@ -557,58 +507,6 @@ def about(request):
             "features": utils.planned_upcoming_features,
             })
 
-def guide(request):
-    """
-    #TODO
-    Ideally, this should be unnecessary.
-    """
-    return render(request, "jots/guide.html")
-
-
-def profile(request, user_id):
-    """
-    Disabled.
-    """
-    if request.user.is_authenticated:
-        return redirect(reverse("landing"))
-        # if request.method == 'POST' and request.user.id == user_id:
-        #     form = ProfileForm(request.POST)
-
-        #     if form.is_valid():
-        #         form.create_or_edit_profile(request.user, form)
-        #         message = "Your Profile has been saved!"
-
-        #     return redirect(reverse('profile', kwargs={
-        #             'user_id': user_id,
-        #             'message': message,
-        #             }))
-
-        # elif request.user.id == user_id:
-        #     form = ProfileForm()
-        #     try:
-        #         profile = Profile.objects.get(user=user_id)
-        #     except Profile.DoesNotExist:
-        #         profile = None
-
-        #     return render(request, "jots/profile.html", {
-        #         'profile': profile,
-        #         'form': form,
-        #     })
-        # elif request.method == 'GET':
-        #     return redirect(reverse('profile', kwargs={
-        #             'user_id': request.user.id,
-        #             }))
-
-    else:
-        return redirect(reverse("landing"))
-
-
-def profile_edit(request, user_id):
-    """
-    Disabled.
-    """
-    return render(request, "jots/landing.html")
-
 
 def invite(request, collection_id):
     """
@@ -625,7 +523,6 @@ def invite(request, collection_id):
                     form.email_invite_to_jots(request.user, collection.title, email)
             except UnboundLocalError:
                 # TODO Currently doesn't validate more than 1 email.
-                print("oh fuck")
                 pass
         elif "group_invite" in request.POST:
             form = InviteToGroupForm(request.POST)
@@ -655,14 +552,6 @@ def respond_to_invite(request, collection_id):
             return redirect(reverse("collections"))
     return redirect(reverse("landing"))
 
-
-def request_to_join_collection(request, collection_id):
-    """
-    TODO 
-    """
-    # collection = Collection.objects.get(id=collection_id)
-    pass
-    
 
 """ Django Authentication """
 
@@ -734,6 +623,7 @@ def dark_mode(request):
         return redirect(reverse("collections"))
     else:
         return redirect(reverse("landing"))
+
 
 def terms_of_service(request):
     return render(request, "jots/terms_of_service.html", {

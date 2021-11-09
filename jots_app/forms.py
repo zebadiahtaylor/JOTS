@@ -32,15 +32,12 @@ class CollectionForm(forms.ModelForm):
                                     'placeholder': 'Description of Collection', 
                                     'style':fanc_pants_border}),
             'is_public': forms.CheckboxInput(attrs={'style':'width:20px;height:20px;'}),
-            'allow_public_join_requests': forms.CheckboxInput(attrs={'style':'width:20px;height:20px;'}),
-            # 'auto_accept_all_join_requests': forms.CheckboxInput(attrs={'style':'width:20px;height:20px;'}),
         }
 
         labels = {
             'title': '',
             'description': '',
             'is_public': "Would you like this collection's articles and notes to be readable by the public? Only those who have joined your group may contribute.",
-            'allow_public_join_requests': "Would you like to list your group as joinable by the public?",
         }
     
     @staticmethod

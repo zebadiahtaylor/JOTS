@@ -4,7 +4,7 @@ from markdown2 import Markdown
 
 from .models import Collection, Note, Tag, Article
 
-""" re: users """
+""" users """
 
 def user_has_follower_permissions(collection_id, user):
     """
@@ -29,7 +29,7 @@ def return_rows_for_editing_content(content):
         rows = 20
     return rows
 
-""" re: collection data"""
+""" collections data"""
 
 def get_collection_page_data(collection):
     collection = Collection.objects.get(id=collection)
@@ -72,6 +72,12 @@ def render_terms(slug):
     file = default_storage.open(f"{slug}.md")
     content = file.read().decode("utf-8")
     return markdowner.convert(content)
+
+def get_article(slug):
+    # try:
+    file = default_storage.open(f"articles/{slug}.md")
+    return file.read().decode("utf-8")
+
 
 """ variables """
 

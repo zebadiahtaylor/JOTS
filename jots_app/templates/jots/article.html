@@ -20,7 +20,7 @@
                     {% csrf_token %}
                     <button action="" type="submit" name="delete">Delete</button>
                 </form>
-                <form action="{% url 'article_add_note' article.id note.id %}" class="editNoteForm" method="post" style="display:inline">
+                <form action="{% url 'article_append_note' article.id note.id %}" class="editNoteForm" method="post" style="display:inline">
                     {% csrf_token %}
                     <button action="" type="submit" name="note.id">Add</button>
                 </form>
