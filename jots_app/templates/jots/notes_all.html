@@ -1,5 +1,6 @@
 {% extends 'jots/layout.html' %}
 
+
 {% block content %}
 
     <h6>
@@ -42,7 +43,10 @@
     {% else %}
         <p>No notes match your query</p>
     {% endif %}
-
+    <script>
+        let csrfToken = '{{ csrf_token }}'
+        let collectionId = '{{ collection.id }}'
+    </script>
 
 {% endblock %}
 

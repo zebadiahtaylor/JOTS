@@ -20,8 +20,6 @@ class Collection(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
     is_public = models.BooleanField(default=False)
-    allow_public_join_requests = models.BooleanField(default=False)
-    auto_accept_all_join_requests = models.BooleanField(default=False)
     scheduled_sessions = models.CharField(max_length=200, blank=True)
 
     def __str__(self):

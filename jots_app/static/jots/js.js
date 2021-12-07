@@ -1,57 +1,6 @@
 // js for jots
 
-function showPWandConfirmation() {
-    var x = document.getElementById("password");
-    var y = document.getElementById("confirmation");
-    if (x.type === "password") {
-        x.type = "text";
-        y.type = "text";
-    } else {
-        x.type = "password";
-        y.type = "password";
-    }
-    }
-
-function togglePassword() {
-    var x = document.getElementById("password");
-    if (x.type === "password") {
-        x.type = "text";
-    } else {
-        x.type = "password";
-    }
-}
-
-function showDelete($deleteID) {
-        
-    let deleteform = document.getElementById($deleteID);
-    let showBut = document.getElementById(showDel);
-
-    if (showBut.innerText === 'Delete Article?') {
-        showBut.innerText = 'Hide Delete Options';
-        document.getElementById(`noteForm${$noteId}`).style.display = '';
-        document.getElementById('id_for_text').value = document.getElementById('note' + $noteId).innerHTML; 
-        document.getElementById('id_for_text').focus()
-    }
-    else {
-        edit.innerText='Edit';
-        document.getElementById(`noteForm${$noteId}`).style.display = 'none';
-    }
-}
-
-function copyNote($noteId) {
-    /* Get the text field */
-    const copyText = document.getElementById(`note${$noteId}`);
-    copyText.focus();
-    /* Select the text field */
-    copyText[0].select();
-    copyText[0].setSelectionRange(0, 99999); /* For mobile devices */
-  
-     /* Copy the text inside the text field */
-    navigator.clipboard.writeText(copyText.value);
-  
-    /* Alert the copied text */
-    alert("Copied the text: " + copyText.value);
-}
+// INTERFACE USABILITY JS for notes.html & notes_all.html
 
 function editText($noteId) {
         
@@ -72,7 +21,6 @@ function editText($noteId) {
 }
 
 function editTextOnNotesAll($noteId) {
-        
     let edit = document.getElementById($noteId);
     let noteForm = document.getElementById(`noteForm${$noteId}`);
 
@@ -116,10 +64,68 @@ function populateEditFormsOnNotesAll($noteId) {
 }
 
 function findFocus() {
+    // Focuses relevant input area. 
     let editForms = document.getElementsByName('text');
     for(var i = 1; i < editForms.length; i++){
         if (editForms[i].style.display === '') {
             editForms[i].focus();
         }
     }
+}
+
+// PASSWORD VISIBILITY TOGGLES
+function showPWandConfirmation() {
+    var x = document.getElementById("password");
+    var y = document.getElementById("confirmation");
+    if (x.type === "password") {
+        x.type = "text";
+        y.type = "text";
+    } else {
+        x.type = "password";
+        y.type = "password";
+    }
+    }
+
+function togglePassword() {
+    var x = document.getElementById("password");
+    if (x.type === "password") {
+        x.type = "text";
+    } else {
+        x.type = "password";
+    }
+}
+
+
+// Not currently implemented.
+function showDelete($deleteID) {
+        
+    let deleteform = document.getElementById($deleteID);
+    let showBut = document.getElementById(showDel);
+
+    if (showBut.innerText === 'Delete Article?') {
+        showBut.innerText = 'Hide Delete Options';
+        document.getElementById(`noteForm${$noteId}`).style.display = '';
+        document.getElementById('id_for_text').value = document.getElementById('note' + $noteId).innerHTML; 
+        document.getElementById('id_for_text').focus()
+    }
+    else {
+        edit.innerText='Edit';
+        document.getElementById(`noteForm${$noteId}`).style.display = 'none';
+    }
+}
+
+// Not currently implemented.  
+function copyNote($noteId) {
+    /* Get the text field */
+    const copyText = document.getElementById(`note${$noteId}`);
+    copyText.focus();
+    /* Select the text field */
+    copyText[0].select();
+    copyText[0].setSelectionRange(0, 99999); /* For mobile devices */
+  
+     /* Copy the text inside the text field */
+    navigator.clipboard.writeText(copyText.value);
+  
+    /* Alert the copied text */
+    alert("Copied the text: " + copyText.value);
 }

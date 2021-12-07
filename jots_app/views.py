@@ -1,19 +1,18 @@
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from django.db import IntegrityError
 from django.urls import reverse
+
+from django.forms.models import model_to_dict
 
 from .forms import *
 from .models import User, Collection, Note, Tag, Article
 from . import utils
 
 # Create your views here.
-
-def tests(request):
-    return render(request, "jots/test.html")
     
 def landing(request):
     return render(request, 'jots/landing.html')
@@ -231,7 +230,7 @@ def notes(request, collection_id):
 
         return render(request, "jots/notes.html", {
             'collection': collection,
-            'notes': notes.order_by("-created_at")[:40],
+            'notes': notes.order_by("-created_at")[:30],
             'tags': tags.order_by("name"),
             'noteform': NewNoteForm(),
             'is_member': is_member,
@@ -255,7 +254,7 @@ def notes_all(request, collection_id):
 
         return render(request, "jots/notes_all.html", {
             'collection': collection,
-            'notes': notes.order_by("-created_at"),
+            'notes': notes.order_by("-created_at")[:30],
             'tags': tags.order_by("name"),
             'editnoteform': EditNoteForm(auto_id='id_for_%s'),
             'is_member': is_member,
@@ -569,11 +568,11 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "jots/login.html", {
+            return render(request, "users/login.html", {
                 "message": "Invalid username and/or password."
             })
     else:
-        return render(request, "jots/login.html")
+        return render(request, "users/login.html")
 
 
 def logout_view(request):
@@ -590,7 +589,7 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "jots/register.html", {
+            return render(request, "users/register.html", {
                 "message": "Passwords must match."
             })
 
@@ -599,13 +598,13 @@ def register(request):
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "jots/register.html", {
+            return render(request, "users/register.html", {
                 "message": "Username already taken."
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
-        return render(request, "jots/register.html")
+        return render(request, "users/register.html")
 
 
 def dark_mode(request):

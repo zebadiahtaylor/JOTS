@@ -1,0 +1,56 @@
+{% extends "jots/layout.html" %}
+
+{% block content %}
+<!-- WE ARE HERE 
+
+    EXPERIMENTING WITH JQUERY FOR AJAX CALLS
+    READ HERE    https://www.w3schools.com/jquery/jquery_ajax_load.asp
+-->
+    <div class="container mt-5 w-50">
+        <form id="signupForm" method="POST">
+            <input type="text" placeholder="huh" autofocus id="thisthang"></input>
+            <input type="submit" name="signupSubmit" class="btn btn-success btn-lg" />
+            <div class="valid" style="display:none"><small>Valid Username!</small></div>
+            <div class="invalid" style="display:none; color:red"><small>Username already exists :(</small></div>
+
+        </form>
+    </div>
+
+    {% block javascript %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // catch the form's submit event
+            $('#thisthang').keyup(function () {
+                // create an AJAX call
+                $.ajax({
+                    data: $(this).serialize(), // get the form data
+                    url: "{% url 'validate_username' %}",
+                    // on success
+                    success: function (response) {
+                        if (response.is_taken == true) {
+                            $('#notify').removeClass('is-valid').addClass('is-invalid');
+                            $('#thisthang').after('<div class="invalid-feedback d-block" id="usernameError">This username is not available!</div>')
+                        }
+                        else {
+                            $('#thisthang').removeClass('is-invalid').addClass('is-valid');
+                            $('#usernameError').remove();
+
+                        }
+
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+                        console.log(response.responseJSON.errors)
+                    }
+                });
+
+                return false;
+            });
+        })
+    </script>
+    {% endblock javascript %}
+
+{% endblock %}

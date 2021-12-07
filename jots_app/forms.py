@@ -1,5 +1,4 @@
 from django import forms
-from django.utils.safestring import mark_safe
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
@@ -7,21 +6,11 @@ from django.core.mail import send_mail
 from .models import Collection, Note, Tag, Article, User
 from .form_utils import *
 
-import time
-import os
-""" 
-1. Variables (temporary)
-2. Model Forms & and related forms
-3. Validation functions.
-"""
-
-""" Variables (temporary storage). Move to utils once circular import issue resolved. """
-
 
 class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
-        fields = ['title', 'description', 'is_public', 'allow_public_join_requests']
+        fields = ['title', 'description', 'is_public']
 
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 
@@ -49,7 +38,6 @@ class CollectionForm(forms.ModelForm):
                 description = escape(form.cleaned_data["description"]),
                 leader = user,
                 is_public = form.cleaned_data["is_public"],
-                allow_public_join_requests = form.cleaned_data["allow_public_join_requests"],
                 )
 
             return collection
@@ -60,7 +48,6 @@ class CollectionForm(forms.ModelForm):
             collection.title = standarize_titles(escape(form.cleaned_data['title']))
             collection.description = escape(form.cleaned_data["description"])
             collection.is_public = form.cleaned_data["is_public"]
-            collection.allow_public_join_requests = form.cleaned_data["allow_public_join_requests"]
             collection.save()
 
             return collection
@@ -72,7 +59,6 @@ class CollectionForm(forms.ModelForm):
             "title": collection.title,
             "description": collection.description,
             "is_public": collection.is_public,
-            "allow_public_join_requests": collection.allow_public_join_requests,
             })
         return form
 
@@ -351,7 +337,7 @@ class ArticleForm(forms.ModelForm):
     @staticmethod
     def slugify_article(collection_id, title):
         collection = Collection.objects.get(id=collection_id)
-        slug = f"{collection.id}{title}{time.time()}"
+        slug = f"{collection.id}{title}"
         slug = slug.replace(" ", "-")
         slug = slug.replace("'", "-")
         slug = slug.replace(".", "-")
@@ -382,12 +368,12 @@ class ArticleForm(forms.ModelForm):
                 return True
 
 
-
 class EditArticleForm(ArticleForm):
     
     class Meta:
         model = Article
         fields = ['title', 'tag', 'content']
+
 
 class DeleteArticleForm(DeleteCollectionForm):
 
@@ -396,8 +382,9 @@ class DeleteArticleForm(DeleteCollectionForm):
         form = DeleteArticleForm(form)
         if form.is_valid() and form.cleaned_data['typed_confirmation'] == "DELETE":
             article = Article.objects.get(id=article_id)
-            if os.path.exists(f"article/{article.content_slug}.md"):
-                os.remove("demofile.txt")
+            filename = f"articles/{article.content_slug}.md"
+            if default_storage.exists(filename):
+                default_storage.delete(filename)
             article.delete()
             return "Article Deleted"
         else:
@@ -405,6 +392,7 @@ class DeleteArticleForm(DeleteCollectionForm):
 
 
 """ Invites | Join Requests |  Feedback """
+
 
 class InviteToJotsForm(forms.Form):
     email = forms.EmailField(label='', max_length=100, widget=forms.TextInput(attrs={'placeholder': 'Email of the person you would like to invite to jots', 'class': 'form-control'}))
@@ -436,7 +424,7 @@ class InviteToGroupForm(forms.Form):
             else:
                 return True
         except User.DoesNotExist:
-            # for security, doesn't show if the user doesn't exist.
+            # for security, doesn't show whether the user exists.
             return True
 
 
